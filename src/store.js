@@ -1,38 +1,17 @@
-import { createStore } from 'redux';
+import { configureStore, createSlice } from '@reduxjs/toolkit';
 
-const ADD_TASK = 'ADD_TASK';
-const REMOVE_TASK = 'REMOVE_TASK';
+const taskSlice = createSlice({
+  name: 'task',
+  initialState: [],
+  reducers: {
+    create: (state, action) => {
+      state.push(action.payload);
+    },
+    remove: (state, action) =>
+      state.filter((task) => task.id !== action.payload.id),
+  },
+});
 
-const addTask = (text) => {
-  return {
-    type: ADD_TASK,
-    payload: { id: Date.now().toString(), text },
-  };
-};
+export const { create, remove } = taskSlice.actions;
 
-const removeTask = (id) => {
-  return {
-    type: REMOVE_TASK,
-    payload: { id },
-  };
-};
-
-const taskReducer = (state = [], action) => {
-  switch (action.type) {
-    case ADD_TASK:
-      return [action.payload, ...state];
-    case REMOVE_TASK:
-      return state.filter((task) => task.id !== action.payload.id);
-    default:
-      return state;
-  }
-};
-
-const taskStore = createStore(taskReducer);
-
-export const actionCreators = {
-  addTask,
-  removeTask,
-};
-
-export default taskStore;
+export default configureStore({ reducer: taskSlice.reducer });

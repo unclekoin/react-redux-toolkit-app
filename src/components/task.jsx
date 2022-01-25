@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { actionCreators } from '../store';
+import { remove } from '../store';
 
 const Task = ({ id, text, removeTask }) => {
   return (
@@ -16,7 +16,7 @@ const Task = ({ id, text, removeTask }) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    removeTask: () => dispatch(actionCreators.removeTask(ownProps.id)),
+    removeTask: () => dispatch(remove({id: ownProps.id})),
   };
 };
 
