@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Task from '../components/task';
-import { create } from '../store';
+import { createTask, getTaskList } from '../store';
 
-const Home = ({ tasks, addTask }) => {
+const Home = () => {
+  const dispatch = useDispatch();
+  const taskList = useSelector(getTaskList());
   const [text, setText] = useState('');
+  console.log(taskList)
 
   const onChange = ({ target }) => {
     setText(target.value);
@@ -12,7 +16,7 @@ const Home = ({ tasks, addTask }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (text.trim()) addTask(text);
+    if (text.trim()) dispatch(createTask(text));
     setText('');
   };
 
@@ -35,7 +39,7 @@ const Home = ({ tasks, addTask }) => {
         </button>
       </form>
       <ul className="list-group">
-        {tasks.map((task) => (
+        {taskList.map((task) => (
           <Task key={task.id} {...task} />
         ))}
       </ul>
@@ -43,17 +47,4 @@ const Home = ({ tasks, addTask }) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return { tasks: state };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    addTask: (text) => dispatch(create({
-      id: Date.now().toString(),
-      text
-    })),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default Home;

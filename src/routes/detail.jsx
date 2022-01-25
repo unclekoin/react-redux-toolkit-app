@@ -1,10 +1,14 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { getTaskList } from '../store';
+import { getDate } from '../utils/get-date';
 
-const Detail = ({ task }) => {
-  const getDate = () =>
-    task ? new Date(Number(task.id)).toDateString() : new Date().toDateString();
+const Detail = () => {
+  const { taskId } = useParams();
+  const tasksList = useSelector(getTaskList());
+  const task = tasksList.find((task) => task.id === taskId);
   
   return (
     <>
@@ -14,7 +18,7 @@ const Detail = ({ task }) => {
       </Link>
       <h1 className="text-center mb-4">Task page</h1>
       <div>
-        <span className="fw-bolder">Task created:</span> {getDate()}
+        <span className="fw-bolder">Task created:</span> {getDate(taskId)}
       </div>
       <div>
         <span className="fw-bolder">Task:</span>{' '}
@@ -24,13 +28,4 @@ const Detail = ({ task }) => {
   );
 };
 
-const mapStateToProps = (state, ownProps) => {
-  const {
-    match: {
-      params: { id },
-    },
-  } = ownProps;
-  return { task: state.find((task) => task.id === id) };
-};
-
-export default connect(mapStateToProps)(Detail);
+export default Detail;
